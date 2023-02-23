@@ -267,7 +267,8 @@ func main() {
 		fmt.Fprintf(os.Stderr, "%s %s\n", filepath.Base(os.Args[0]), version)
 		os.Exit(0)
 	}
-
+	//默认用plaintext格式的请求
+	*plaintext = true
 	// Do extra validation on arguments and figure out what user asked us to do.
 	if *connectTimeout < 0 {
 		fail(nil, "The -connect-timeout argument must not be negative.")
@@ -303,12 +304,21 @@ func main() {
 	args := flags.Args()
 
 	if len(args) == 0 {
-		fail(nil, "Too few arguments.")
+		fail(nil, "定制版本, 请求的参数太少了")
 	}
 	var target string
 	if args[0] != "list" && args[0] != "describe" {
 		target = args[0]
 		args = args[1:]
+		err := addlHeaders.Set(fmt.Sprintf("to:" + target))
+		if err != nil {
+			fail(nil, err.Error()+",ask ck")
+		}
+	}
+
+	target = strings.TrimSpace(os.Getenv("grpc_proxy"))
+	if target == "" {
+		fail(nil, "miss env grpc_proxy, ask ck")
 	}
 
 	if len(args) == 0 {
