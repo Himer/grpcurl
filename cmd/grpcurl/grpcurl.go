@@ -315,7 +315,7 @@ func main() {
 		if err != nil {
 			fail(nil, err.Error()+",ask ck")
 		}
-		requestId := fmt.Sprintf("gc%s", encode(time.Now().Unix()))
+		requestId := fmt.Sprintf("gc%s", encode(time.Now().UnixNano()))
 		err = addlHeaders.Set("requestId:" + requestId)
 		if err != nil {
 			fail(nil, err.Error()+",miss requestId")
