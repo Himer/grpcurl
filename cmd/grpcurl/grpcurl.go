@@ -8,6 +8,7 @@ import (
 	"flag"
 	"fmt"
 	"io"
+	"log"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -314,6 +315,12 @@ func main() {
 		if err != nil {
 			fail(nil, err.Error()+",ask ck")
 		}
+		requestId := fmt.Sprintf("gc%s", encode(time.Now().Unix()))
+		err = addlHeaders.Set("requestId:" + requestId)
+		if err != nil {
+			fail(nil, err.Error()+",miss requestId")
+		}
+		log.Println("RequestId:" + printRed(requestId))
 	}
 
 	target = strings.TrimSpace(os.Getenv("grpc_proxy"))
